@@ -1,0 +1,308 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Time Together ❤️</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #fff0f5, #ffe4ec, #fff8fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #5a2638;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: min(90%, 700px);
+            padding: 45px 25px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 50px rgba(180, 80, 120, 0.12);
+        }
+
+        .heart {
+            font-size: 38px;
+            margin-bottom: 12px;
+            animation: heartbeat 1.8s infinite;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(32px, 6vw, 55px);
+            font-weight: 500;
+            color: #8f3154;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            letter-spacing: 1px;
+            color: #9b6678;
+            margin-bottom: 35px;
+        }
+
+        .date {
+            font-size: 13px;
+            color: #a36a7f;
+            margin-bottom: 25px;
+        }
+
+        .timer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .time-box {
+            padding: 18px 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 18px;
+        }
+
+        .number {
+            font-size: clamp(24px, 5vw, 38px);
+            font-weight: 600;
+            color: #7d2948;
+        }
+
+        .label {
+            margin-top: 5px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #a56b7e;
+        }
+
+        .message {
+            margin-top: 32px;
+            font-family: Georgia, serif;
+            font-size: 17px;
+            font-style: italic;
+            color: #86415b;
+        }
+
+        /* Floating hearts */
+        .hearts {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -50px;
+            color: #f58aaa;
+            font-size: 18px;
+            opacity: 0;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.7);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 0.75;
+            }
+
+            80% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(-115vh) rotate(25deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            15% {
+                transform: scale(1.12);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                padding: 35px 15px;
+            }
+
+            .timer {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .message {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hearts"></div>
+
+    <div class="container">
+
+        <div class="heart">♥</div>
+
+        <h1>Our Love Story</h1>
+
+        <div class="subtitle">
+            Every second with you is a second worth remembering.
+        </div>
+
+        <div class="date">
+            Together since <strong>9 August 2024</strong>
+        </div>
+
+        <div class="timer">
+
+            <div class="time-box">
+                <div class="number" id="years">0</div>
+                <div class="label">Years</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="days">0</div>
+                <div class="label">Days</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="hours">0</div>
+                <div class="label">Hours</div>
+            </div>
+
+            <div class="time-box">
+                <div class="number" id="minutes">0</div>
+                <div class="label">Minutes</div>
+            </div>
+
+        </div>
+
+        <div class="time-box" style="margin-top: 12px;">
+            <div class="number" id="seconds">0</div>
+            <div class="label">Seconds</div>
+        </div>
+
+        <div class="message">
+            "And somehow, I still choose you every single day. ❤️"
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Relationship start date
+        const startDate = new Date("2024-08-09T00:00:00");
+
+        function updateTimer() {
+
+            const now = new Date();
+
+            let years = now.getFullYear() - startDate.getFullYear();
+
+            let anniversary = new Date(startDate);
+            anniversary.setFullYear(startDate.getFullYear() + years);
+
+            if (now < anniversary) {
+                years--;
+                anniversary = new Date(startDate);
+                anniversary.setFullYear(startDate.getFullYear() + years);
+            }
+
+            let remaining = now - anniversary;
+
+            const day = 1000 * 60 * 60 * 24;
+            const hour = 1000 * 60 * 60;
+            const minute = 1000 * 60;
+            const second = 1000;
+
+            const days = Math.floor(remaining / day);
+            remaining %= day;
+
+            const hours = Math.floor(remaining / hour);
+            remaining %= hour;
+
+            const minutes = Math.floor(remaining / minute);
+            remaining %= minute;
+
+            const seconds = Math.floor(remaining / second);
+
+            document.getElementById("years").textContent = years;
+            document.getElementById("days").textContent = days;
+            document.getElementById("hours").textContent = hours;
+            document.getElementById("minutes").textContent = minutes;
+            document.getElementById("seconds").textContent = seconds;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+
+        // Create floating hearts
+        function createHeart() {
+
+            const heart = document.createElement("div");
+
+            heart.classList.add("floating-heart");
+            heart.innerHTML = Math.random() > 0.5 ? "♥" : "♡";
+
+            heart.style.left = Math.random() * 100 + "vw";
+
+            const size = 12 + Math.random() * 18;
+            heart.style.fontSize = size + "px";
+
+            const duration = 6 + Math.random() * 7;
+            heart.style.animationDuration = duration + "s";
+
+            heart.style.opacity = 0.3 + Math.random() * 0.5;
+
+            document.querySelector(".hearts").appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Keep creating hearts
+        setInterval(createHeart, 450);
+
+    </script>
+
+</body>
+
+</html>
+```
